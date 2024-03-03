@@ -54,30 +54,37 @@ st.title("Application Machine Learning")
 # Étape 2: Chargement du jeu de données
 df = load_data()
 
+if st.checkbox('Afficher les valeurs uniques dans chaque colonne'):
+    count_unique_values(df)
+
 # ------------------------------------------------------------------------------
 # Étape 3: Traitement des données
 selected_columns, target_column = show_data_processing_options(df)
 
+st.sidebar.write("Traitements variables:")
+
 # Analyse descriptive
-descriptive_analysis(df)
+descriptive_analysis(df[selected_columns])
 
 # Graphique de distribution et pairplot
 distribution_pairplot(df, selected_columns, target_column)
 
 # Corrélation avec la cible
-correlation_with_target(df, target_column)
+correlation_with_target(df[selected_columns], df[target_column])
+
+# Standardisation
+standardization(df[selected_columns])
+
+st.sidebar.write("Traitements variable cible:")
 
 # Fréquences
 column_frequencies(df, target_column)
 
-# Standardisation
-standardization(df)
-
 # Visualisation de la distribution normale
-visualize_normal_distribution(df, selected_columns)
+visualize_normal_distribution(df, target_column)
 
 # Visualisation de la distribution exponentielle
-visualize_exponential_distribution(df, selected_columns)
+visualize_exponential_distribution(df, target_column)
 
 # --------------------------------------------------------------------------
 # Étape 4: Machine Learning

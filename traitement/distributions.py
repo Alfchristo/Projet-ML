@@ -3,6 +3,17 @@ from scipy.stats import norm, shapiro, expon
 import numpy as np
 import matplotlib.pyplot as plt
 import streamlit as st
+import seaborn as sns
+
+
+def distribution_pairplot(df, selected_columns, target_column):
+    if st.sidebar.checkbox("Graphique de distribution et pairplot"):
+        st.write("Graphique de distribution :")
+        if target_column:
+            st.pyplot(sns.pairplot(df[selected_columns + [target_column]]).fig)
+        else:
+            st.write("S'il vous plait selectionnez une colonne cible pour afficher les graphiques")
+
 
 
 def visualize_normal_distribution(df, selected_columns):

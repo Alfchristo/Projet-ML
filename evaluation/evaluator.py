@@ -3,7 +3,7 @@ import pandas as pd
 import matplotlib.pyplot as plt
 import seaborn as sns
 from sklearn.metrics import accuracy_score, confusion_matrix
-
+import numpy as np
 from sklearn.decomposition import PCA
 import streamlit as st
 from sklearn.metrics import accuracy_score, confusion_matrix
