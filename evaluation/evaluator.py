@@ -28,6 +28,8 @@ def evaluate_model(model, selected_model, X_test, y_test):
 
                 accuracy = accuracy_score(y_test, y_pred)
                 st.write("Précision du modèle :", accuracy)
+                st.write("valeurs prédites :", model.predict(X_test))
+                st.write("vrai valeurs:", y_test)
 
                 # Confusion matrix
                 st.write("Matrice de confusion :")

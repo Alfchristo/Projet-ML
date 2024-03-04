@@ -4,12 +4,10 @@
     <option name="autoReloadType" value="SELECTIVE" />
   </component>
   <component name="ChangeListManager">
-    <list default="true" id="eac2e075-d2c3-46e7-840d-6cd84e244319" name="Changes" comment="- Changement comportement colonnes">
-      <change afterPath="$PROJECT_DIR$/traitement/description.py" afterDir="false" />
+    <list default="true" id="eac2e075-d2c3-46e7-840d-6cd84e244319" name="Changes" comment="- V. 03/03/2024 18h30">
       <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/application.py" beforeDir="false" afterPath="$PROJECT_DIR$/application.py" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/evaluation/evaluator.py" beforeDir="false" afterPath="$PROJECT_DIR$/evaluation/evaluator.py" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/traitement/distributions.py" beforeDir="false" afterPath="$PROJECT_DIR$/traitement/distributions.py" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/traitement/description.py" beforeDir="false" afterPath="$PROJECT_DIR$/traitement/description.py" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/traitement/nettoyage.py" beforeDir="false" afterPath="$PROJECT_DIR$/traitement/nettoyage.py" afterDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
@@ -58,7 +56,7 @@
     "node.js.selected.package.eslint": "(autodetect)",
     "node.js.selected.package.tslint": "(autodetect)",
     "nodejs_package_manager_path": "npm",
-    "settings.editor.selected.configurable": "com.intellij.platform.ide.impl.presentationAssistant.PresentationAssistantConfigurable",
+    "settings.editor.selected.configurable": "preferences.pluginManager",
     "vue.rearranger.settings.migration": "true"
   }
 }]]></component>
@@ -91,7 +89,8 @@
       <workItem from="1709194967982" duration="19066000" />
       <workItem from="1709281581375" duration="23000" />
       <workItem from="1709281631572" duration="11210000" />
-      <workItem from="1709477233330" duration="8844000" />
+      <workItem from="1709477233330" duration="15012000" />
+      <workItem from="1709540851687" duration="3230000" />
     </task>
     <task id="LOCAL-00001" summary="- Création dossiers">
       <option name="closed" value="true" />
@@ -165,7 +164,15 @@
       <option name="project" value="LOCAL" />
       <updated>1709303292772</updated>
     </task>
-    <option name="localTasksCounter" value="10" />
+    <task id="LOCAL-00010" summary="- V. 03/03/2024 18h30">
+      <option name="closed" value="true" />
+      <created>1709488045674</created>
+      <option name="number" value="00010" />
+      <option name="presentableId" value="LOCAL-00010" />
+      <option name="project" value="LOCAL" />
+      <updated>1709488045674</updated>
+    </task>
+    <option name="localTasksCounter" value="11" />
     <servers />
   </component>
   <component name="TypeScriptGeneratedFilesManager">
@@ -179,7 +186,8 @@
     <MESSAGE value="- Ebauche app streamlit" />
     <MESSAGE value="- restructuration code fatima" />
     <MESSAGE value="- Changement comportement colonnes" />
-    <option name="LAST_COMMIT_MESSAGE" value="- Changement comportement colonnes" />
+    <MESSAGE value="- V. 03/03/2024 18h30" />
+    <option name="LAST_COMMIT_MESSAGE" value="- V. 03/03/2024 18h30" />
   </component>
   <component name="com.intellij.coverage.CoverageDataManagerImpl">
     <SUITE FILE_PATH="coverage/Projet_ML$traitement.coverage" NAME="traitement Coverage Results" MODIFIED="1709138532469" SOURCE_PROVIDER="com.intellij.coverage.DefaultCoverageFileProvider" RUNNER="coverage.py" COVERAGE_BY_TEST_ENABLED="true" COVERAGE_TRACING_ENABLED="false" WORKING_DIRECTORY="$PROJECT_DIR$/traitement" />
