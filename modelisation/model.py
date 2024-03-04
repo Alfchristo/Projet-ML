@@ -11,7 +11,8 @@ import streamlit as st
 
 # Function to train the selected machine learning model
 
-def train_machine_learning_model(selected_model, X_train, y_train):
+# Function to train machine learning model
+def train_machine_learning_model(selected_model, X_train, y_train, num_epochs):
     model = None
     if selected_model == "Linear Regression":
         model = LinearRegression()
@@ -32,8 +33,10 @@ def train_machine_learning_model(selected_model, X_train, y_train):
         st.warning("Modèle non pris en charge : {}".format(selected_model))
 
     if model is not None:
-        model.fit(X_train, y_train)
-        st.success("Le modèle a été entraîné avec succès!")
+        for epoch in range(num_epochs):
+            model.fit(X_train, y_train)
+            # You can add progress indicators or logging here if needed
+        st.success("Le modèle a été entraîné avec succès sur {} epochs!".format(num_epochs))
     return model
 
 
