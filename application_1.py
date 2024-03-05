@@ -1,85 +1,96 @@
+#!/usr/bin/env python
+# coding: utf-8
+import streamlit as st
 import pandas as pd
+from sklearn.model_selection import train_test_split
+from sklearn.linear_model import LinearRegression, LogisticRegression
+from sklearn.tree import DecisionTreeClassifier
+from sklearn.svm import SVC
+from sklearn.naive_bayes import GaussianNB
+from sklearn.ensemble import RandomForestClassifier
+from sklearn.decomposition import PCA
+from sklearn.metrics import accuracy_score, confusion_matrix
+import matplotlib.pyplot as plt
+import seaborn as sns
+
+import seaborn as sns
+from sklearn.preprocessing import StandardScaler
+from sklearn.preprocessing import LabelEncoder
+from sklearn.impute import SimpleImputer
+from sklearn.pipeline import Pipeline
+from sklearn.metrics import accuracy_score, classification_report
+# Importez les bibliothèques nécessaires au début de votre script
+from sklearn.model_selection import train_test_split
+from sklearn.ensemble import RandomForestClassifier, RandomForestRegressor
+from sklearn.tree import DecisionTreeClassifier
+from sklearn.linear_model import LogisticRegression
+from scipy.stats import expon
+from scipy.stats import norm
+from sklearn.linear_model import LinearRegression
+import numpy as np
+import matplotlib.pyplot as plt
+from scipy.stats import shapiro
+from sklearn.linear_model import LinearRegression, LogisticRegression
+from sklearn.tree import DecisionTreeClassifier
+from sklearn.svm import SVC
+from sklearn.naive_bayes import GaussianNB
+from sklearn.ensemble import RandomForestClassifier
+from sklearn.decomposition import PCA
+from sklearn.metrics import confusion_matrix
+from sklearn.metrics import mean_squared_error, mean_absolute_error
 import streamlit as st
 from reportlab.pdfgen import canvas
-#from lazypredict.Supervised import LazyClassifier
-from sklearn.decomposition import PCA
-from sklearn.ensemble import RandomForestClassifier
-from sklearn.linear_model import LinearRegression, LogisticRegression
-from sklearn.metrics import mean_squared_error, mean_absolute_error
-from sklearn.model_selection import train_test_split, GridSearchCV
-from sklearn.naive_bayes import GaussianNB
-from sklearn.svm import SVC
-from sklearn.tree import DecisionTreeClassifier
-from tensorflow.python.keras.models import Sequential
-from tensorflow.python.layers.core import Dense
 
 from evaluation.evaluator import evaluate_model
-from modelisation.model import get_user_input, train_machine_learning_model
-from traitement.description import load_data, count_unique_values, detect_na, show_data_processing_options, \
-    descriptive_analysis
-from traitement.distributions import distribution_pairplot, visualize_normal_distribution, \
-    visualize_exponential_distribution
-from traitement.nettoyage import drop_empty_columns, detect_and_drop_similar_to_index_columns, handle_missing_values, \
-    detect_outliers, treat_outliers, correlation_with_target, standardization, column_frequencies, apply_normalization, \
-    apply_encoding_methods
+from modelisation.model import train_machine_learning_model, get_user_input
+from traitement.distributions import visualize_normal_distribution, visualize_exponential_distribution
+from traitement.nettoyage import *
+from traitement.description import load_data
+from traitement.description import show_data_processing_options
+from traitement.description import descriptive_analysis
+from traitement.distributions import distribution_pairplot
+
+
+#def save_as_pdf(dataframe, filename):
+    # Créer un fichier PDF avec reportlab
+    #c = canvas.Canvas(filename)
+
+    # Titre du PDF
+    #c.setFont("Helvetica-Bold", 14)
+    #c.drawString(100, 800, "Rapport de Résultats")
+
+    # Contenu du PDF (utilisez les données du DataFrame)
+    #c.setFont("Helvetica", 12)
+    #text = "\n".join(dataframe.to_string(index=False).split('\n'))
+    #c.drawString(100, 750, text)
+
+    # Enregistrez le PDF
+    #c.save()
+    #st.success(f"Le fichier PDF '{filename}' a été créé avec succès!")
 
 st.title("Mon Application Streamlit")
 st.write("Bonjour depuis Streamlit!")
 
-# ----------------------------------------------------------------------------------------------------------------------
 # Étape 1: Construction de Streamlit
 st.sidebar.title("Paramètres")
 
+
 st.title("Application Machine Learning")
-
-# ----------------------------------------------------------------------------------------------------------------------
 # Étape 2: Chargement du jeu de données
-# df = load_data()
-st.session_state.df = load_data()
-df = st.session_state.df
-if df is not None:
-    if st.checkbox('Détecter les valeurs manquantes'):
-        detect_na(df)
+df = load_data()
 
-    if st.checkbox('Détecter les outliers'):
-        outliers = detect_outliers(df)
-        if outliers.empty:
-            st.write("Aucun outlier détecté.")
-        else:
-            st.write("Outliers détectés :")
-            st.write(outliers)
+if st.checkbox('Afficher les valeurs uniques dans chaque colonne'):
+    count_unique_values(df)
 
-    if st.checkbox('Traiter les outliers'):
-        threshold = st.slider("Choisir le seuil de Z-score :", min_value=1, max_value=10, value=3, step=1)
-        df = treat_outliers(df, threshold)
-        st.write("Après le traitement des outliers :")
-        st.write(df.head())
 
-    if st.checkbox('Supprimer les colonnes vides'):
-        df = drop_empty_columns(df)
-
-    if st.checkbox('Detecter et supprimer les colonnes similaires à l\'index'):
-        df = detect_and_drop_similar_to_index_columns(df)
-
-    if st.checkbox('Afficher les valeurs uniques dans chaque colonne'):
-        count_unique_values(df)
-
-    df = handle_missing_values(df)
-
-    st.write("Après suppression des colonnes vides et similaires à l'index :")
-    st.write(df.head())
-
-    selected_columns, target_column = show_data_processing_options(df)
-
-    st.session_state.df = df
-
-# ----------------------------------------------------------------------------------------------------------------------
+# ------------------------------------------------------------------------------
 # Étape 3: Traitement des données
+selected_columns, target_column = show_data_processing_options(df)
 
 st.sidebar.write("Traitements variables:")
 
 # Analyse descriptive
-descriptive_analysis(df[selected_columns])
+descriptive_analysis(df)
 
 # Graphique de distribution et pairplot
 distribution_pairplot(df, selected_columns, target_column)
@@ -87,9 +98,8 @@ distribution_pairplot(df, selected_columns, target_column)
 # Corrélation avec la cible
 correlation_with_target(selected_columns, target_column)
 
-# Ajouté ici code standardisation
-
-# Ajouté ici code encodage
+# Standardisation
+standardization(df)
 
 st.sidebar.write("Traitements variable cible:")
 
@@ -101,25 +111,28 @@ visualize_normal_distribution(df, target_column)
 
 # Visualisation de la distribution exponentielle
 visualize_exponential_distribution(df, target_column)
+
 # --------------------------------------------------------------------------
 # Étape 4: Machine Learning
+
+# Diviser les données en ensembles d'entraînement et de test
+X_train, X_test, y_train, y_test = train_test_split(df[selected_columns], df[target_column], test_size=0.2, random_state=42)
 # Sidebar Section: Model Training
 st.sidebar.subheader("Bloc de Machine Learning")
 
 # Initialization of the model to None
-#model = None
-# Initialize session state
-if 'state' not in st.session_state:
-    st.session_state.state = {
-        'model': None
-    }
-train_model = st.sidebar.toggle("Entraîner le modèle")
+model = None
+
+n_components = st.sidebar.slider("Nombre de composants principaux", min_value=1, max_value=df.shape[1], value=5)
+# Training the model
+train_model = st.sidebar.checkbox("Entraîner le modèle")
 
 if train_model:
     selected_model = st.sidebar.selectbox("Sélectionnez le modèle", [" ", "Linear Regression", "Logistic Regression",
                                                                      "Decision Tree", "SVM", "Naive Bayes",
                                                                      "Random Forest",
                                                                      "Dimensionality Reduction Algorithms"])
+
     # Sidebar Section: Model-specific parameters
     st.sidebar.subheader("Paramètres spécifiques au modèle")
 
@@ -153,6 +166,9 @@ if train_model:
         max_depth = st.sidebar.slider("Profondeur maximale des arbres", min_value=1, max_value=20, value=5)
         pass
 
+
+
+
     elif selected_model == "Dimensionality Reduction Algorithms":
         # Utilisez le nombre de composants principaux comme valeur par défaut pour n_components
         n_components = st.sidebar.slider("Nombre de composants principaux", min_value=0, max_value=df.shape[1],
@@ -164,24 +180,18 @@ if train_model:
         n_components = max(n_components, 1)
         pass
 
-    num_epochs = st.sidebar.number_input("Nombre d'époques", min_value=1, value=10)
 
-    if selected_model and selected_columns and target_column:
+    if selected_columns and target_column:
         X_train, X_test, y_train, y_test = train_test_split(df[selected_columns], df[target_column], test_size=0.2,
                                                             random_state=42)
-        # Button to trigger model training
-        if st.sidebar.button("Lancer l'entraînement"):
-            # Model Training
-            st.session_state.state['model'] = train_machine_learning_model(selected_model, X_train, y_train, num_epochs)
 
-        # from sklearn.preprocessing import LabelEncoder
-        # label_encoder = LabelEncoder()
-        # y_train = label_encoder.fit_transform(y_train)
-        # y_test = label_encoder.transform(y_test)
+        from sklearn.preprocessing import LabelEncoder
+        label_encoder = LabelEncoder()
+        y_train = label_encoder.fit_transform(y_train)
+        y_test = label_encoder.transform(y_test)
 
     # Model Training
-    #model = train_machine_learning_model(selected_model, X_train, y_train, num_epochs)
-
+    model = train_machine_learning_model(selected_model, X_train, y_train, num_epochs=100, n_components=n_components)
 # -----------------------------------------------------------------------
 # Initialisation du tableau pour stocker les métriques
 metrics_table = pd.DataFrame(columns=["Modèle", "MSE", "MAE"])
@@ -255,6 +265,8 @@ if st.sidebar.toggle("Comparer les modèles"):
 st.write("Tableau de comparaison des modèles:")
 st.write(metrics_table)
 
+
+
 # Trier le tableau par MSE croissante
 if not metrics_table.empty:
     sorted_table_mse = metrics_table.sort_values(by="MSE")
@@ -283,16 +295,6 @@ if not metrics_table.empty:
 else:
     st.write("Le DataFrame est vide. Aucun modèle n'a été entraîné.")
 
-# -------------------------------------------------------------------------------------------------------
-# Étape 5: Evaluation Modele
-# Sidebar Section: Model Evaluation
-st.sidebar.subheader("Bloc d'Évaluation")
-
-# Model Evaluation
-if st.sidebar.button("Évaluer le modèle"):
-    if st.session_state.state['model'] is not None:
-        evaluate_model(st.session_state.state['model'], selected_model, X_test, y_test)
-
 
 
 
@@ -309,53 +311,18 @@ if st.sidebar.checkbox("Prédictions sur de nouvelles données"):
     else:
         st.warning("Aucun modèle n'est sélectionné.")
 # -------------------------------------------------------------------------------------------------------
+# Étape 5: Evaluation Modele
+# Sidebar Section: Model Evaluation
+st.sidebar.subheader("Bloc d'Évaluation")
+
+# Model Evaluation
+if st.sidebar.button("Évaluer le modèle"):
+    if model is not None:
+        evaluate_model(model, selected_model, X_test, y_test)
+
+# ------------------------------------------------------------------------------------------------------------------------------------
 # Étape 6: Fonctionnalités supplémentaires
 st.sidebar.subheader("Fonctionnalités Supplémentaires")
-"""
-# Définition de la fonction Lazy Predict
-def lazy_predict(X_train, X_test, y_train, y_test):
-    # Utiliser LazyClassifier pour prédire automatiquement avec plusieurs modèles
-    clf = LazyClassifier()
-    models, predictions = clf.fit(X_train, X_test, y_train, y_test)
-
-    # Afficher ou retourner les résultats
-    st.write(models)
-    #st.write(predictions)
-"""
-# Définition de la fonction GridSearchCV
-def grid_search_cv(X_train, y_train):
-    # Créer un modèle RandomForestClassifier (exemple)
-    model = RandomForestClassifier()
-
-    # Définir la grille des hyperparamètres à rechercher
-    param_grid = {'n_estimators': [10, 50, 100], 'max_depth': [None, 10, 20]}
-
-    # Appliquer la recherche par grille
-    grid_search = GridSearchCV(model, param_grid, cv=5)
-    grid_search.fit(X_train, y_train)
-
-    # Afficher les meilleurs hyperparamètres trouvés
-    st.write("Meilleurs hyperparamètres :", grid_search.best_params_)
-
-# Définition de la fonction Keras Model
-def keras_model(X_train, X_test, y_train, y_test):
-    # Créer un modèle séquentiel simple (exemple)
-    model = Sequential()
-    model.add(Dense(64, activation='relu', input_shape=(X_train.shape[1],)))
-    model.add(Dense(1, activation='sigmoid'))
-
-    # Compiler le modèle
-    model.compile(optimizer='adam', loss='binary_crossentropy', metrics=['accuracy'])
-
-    # Entraîner le modèle
-    model.fit(X_train, y_train, epochs=10, batch_size=32, validation_data=(X_test, y_test))
-
-    # Évaluer le modèle
-    accuracy = model.evaluate(X_test, y_test)[1]
-    st.write("Précision du modèle :", accuracy)
-
-# Utilisation des fonctions dans le code principal
-#st.sidebar.subheader("Fonctionnalités Supplémentaires")
 
 # Lazy Predict
 if st.sidebar.checkbox("Lazy Predict"):
@@ -371,3 +338,6 @@ if st.sidebar.checkbox("GridSearchCV"):
 if st.sidebar.checkbox("Modèle de Deep Learning (Keras)"):
     st.write("Modèle de Deep Learning avec Keras :")
     keras_model(X_train, X_test, y_train, y_test)
+
+# In[ ]:
+
